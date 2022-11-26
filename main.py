@@ -12,6 +12,8 @@ def parseInp(ins):
     elif ins == 3:
         pass
     elif ins == 4:
+        transaction.getTransactions()
+    elif ins == 5:
         account.getAll()
     else:
         print("wrong input...")

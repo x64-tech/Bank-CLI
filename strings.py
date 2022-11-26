@@ -2,7 +2,8 @@ promptStr = """
 [1] Accounts Stuff
 [2] Perform Transaction
 [3] Check Balance
-[4] All Accounts
+[4] Check Transaction
+[5] Check Accounts
 [Q] Exit
 """
 

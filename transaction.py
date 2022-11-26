@@ -72,6 +72,25 @@ def transfer():
     print(f"amount transferred success at {date}")
 
 
+def getTransactions():
+    accNo = int(input("Enter Account No. : "))
+    data = cursor.execute("select * from Transactions where accountNo=?;", (accNo,)).fetchall()
+    if data is None:
+        print("\nTransactions Not exists...")
+        return
+    print(f"""
+        displaying {str(len(data))} transactions
+        """)
+    for tr in data:
+        print(f"""
+        ID:{tr[0]}
+        prior:{tr[1]},
+        type:{tr[2]},
+        amount:{tr[3]},
+        date:{tr[5]}
+        """)
+
+
 def parseInp(ins):
     if ins == "1":
         deposit()
