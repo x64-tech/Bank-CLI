@@ -23,7 +23,25 @@ def deposit():
 
 
 def withdraw():
-    pass
+    accNo = int(input("Enter Account No. : "))
+    data = cursor.execute("select balance from users where accountNo=?;", (accNo,)).fetchone()
+    if data is None:
+        print("\nUser Not exists...")
+        return
+    userBalancer = int(data[0])
+    amount = int(input("Enter Amount (int only) : "))
+    if amount < 0:
+        print("amount should be only positive integer ")
+        return
+    elif amount > userBalancer:
+        print("Not enough amount ....")
+        return
+    cursor.execute("update users set balance=? where accountNo=?;", (amount - userBalancer, accNo))
+    date = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
+    cursor.execute("insert into Transactions values (?,?,?,?,?,?)", (None, "bank", "debit", amount, accNo, date))
+    conn.commit()
+
+    print(f"amount withdraw at {date}")
 
 
 def transfer():
@@ -52,4 +70,6 @@ def run():
             transaction = False
         else:
             parseInp(ins)
+
+
 run()
