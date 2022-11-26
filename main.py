@@ -9,7 +9,7 @@ def parseInp(ins):
         account.run()
     elif ins == 2:
         transaction.main()
-    elif ins == 3:
+    elif ins == 4:
         account.getAll()
     else:
         print("wrong input...")

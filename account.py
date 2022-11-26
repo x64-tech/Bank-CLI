@@ -55,11 +55,24 @@ def getAll():
     print(f"displaying {str(len(data))} users\n")
     for user in data:
         print(f"""
-            Account No. {user[0]}
-            Name : {user[1]}
-            email : {user[2]}
-            Balance : {user[3]}
+        Account No. {user[0]}
+        Name : {user[1]}
+        email : {user[2]}
+        Balance : {user[3]}
         """)
+
+
+def deleteAcc():
+    accNo = int(input("Enter Account No. : "))
+    data = cursor.execute("select * from users where accountNo=?;", (accNo,)).fetchone()
+    if data is None:
+        print("\nUser Not exists...")
+        return
+    if input(f"Confirm to delete acc no. {accNo} user ? (y to confirm)") == "y":
+        cursor.execute("delete from users where accountNo=?", (accNo,))
+        print(f"Account no. {accNo} user deleted successfully...")
+    else:
+        print("okk... canceled ")
 
 
 def parseInp(inp):
@@ -69,6 +82,8 @@ def parseInp(inp):
         updateAcc()
     elif inp == "3":
         getOne()
+    elif inp == "4":
+        deleteAcc()
 
     else:
         print("wrong input...")
