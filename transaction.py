@@ -107,4 +107,3 @@ def run():
             transaction = False
         else:
             parseInp(ins)
-

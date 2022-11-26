@@ -1,3 +1,4 @@
+import re
 import strings
 from database import cursor, conn
 from extras import clearScreen
@@ -11,6 +12,9 @@ def createAcc():
 
     if name == "0" or email == "0":
         print(strings.CancelProcess("Create Account"))
+        return
+    if not re.fullmatch(strings.EmailFormate, email):
+        print(strings.EmailError)
         return
 
     cursor.execute("insert into users values (?,?,?,?);", (None, name, email, balance,))
@@ -30,6 +34,9 @@ def updateAcc():
     email = input(strings.EmailInput({data[2]}))
     if name == "0" or email == "0":
         print(strings.CancelProcess("Update Account"))
+        return
+    if not re.fullmatch(strings.EmailFormate, email):
+        print(strings.EmailError)
         return
     cursor.execute("update users set name=?, email=? where accountNo=?", (name, email, accNo,))
     conn.commit()

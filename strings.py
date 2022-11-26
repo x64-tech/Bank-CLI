@@ -37,6 +37,7 @@ TransactionInfo = lambda ID, prior, tpe, amount, date: f"""
     date:{date}
 """
 
+EmailFormate = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
 WrongInput = "\nWrong Input...\n"
 RequiredInput = "\nAll inputs are required (0 to cancel)\n"
 
@@ -49,6 +50,7 @@ AmountInput = "Enter Amount : "
 BalanceInput = "Enter Balance : "
 Back = "\nGoing Back..\n"
 AmountError = "\nAmount Should Be Positive Integer Only\n"
+EmailError = "\nInvalid Email Format\n"
 
 DisplayingContent = lambda total, cont: f"\nDisplaying {total} {cont}\n"
 NotExists = lambda accNo: f"\nUser Not Exists With Account No. {accNo}\n"
