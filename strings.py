@@ -29,6 +29,14 @@ email : {email}
 Balance : {balance}
 """
 
+TransactionInfo = lambda ID, prior, tpe, amount, date: f"""
+    ID:{ID}
+    prior:{prior},
+    type:{tpe},
+    amount:{amount},
+    date:{date}
+"""
+
 WrongInput = "\nWrong Input...\n"
 RequiredInput = "\nAll inputs are required (0 to cancel)\n"
 
@@ -40,13 +48,14 @@ AccNoInput = "Enter Account No. : "
 AmountInput = "Enter Amount : "
 BalanceInput = "Enter Balance : "
 Back = "\nGoing Back..\n"
+AmountError = "\nAmount Should Be Positive Integer Only\n"
 
 DisplayingContent = lambda total, cont: f"\nDisplaying {total} {cont}\n"
 NotExists = lambda accNo: f"\nUser Not Exists With Account No. {accNo}\n"
 CancelProcess = lambda process: f"\nOkk, canceling \"{process}\"\n"
 ProcessCompleted = lambda process, rowID: f"\nUser account is {process} with acc no. {rowID}\n"
 ConfirmDeletion = lambda accNo: f"\nDelete Account No. {accNo} User ? (y to confirm) : "
-
+TransactionCompleted = lambda trans, date: f"\nAmount is {trans} at {date}\n"
 Balance = lambda accNo, balance: f"\nCurrent Balance Of Account No. {accNo} Is {balance}\n"
 
 AccountTableStr = """create table if not exists users (accountNo integer primary key autoincrement, name varchar(50), 

@@ -1,17 +1,18 @@
 import datetime
-from strings import TransactionPromptStr, InputCommandStr
+import strings
 from database import cursor, conn
 
 
 def deposit():
-    accNo = int(input("Enter Account No. : "))
+    print(strings.RequiredInput)
+    accNo = int(input(strings.AccNoInput))
     data = cursor.execute("select balance from users where accountNo=?;", (accNo,)).fetchone()
     if data is None:
-        print("\nUser Not exists...")
+        print(strings.NotExists(str(accNo)))
         return
-    amount = int(input("Enter Amount (int only) : "))
+    amount = int(input(strings.AmountInput))
     if amount < 0:
-        print("amount should be only positive integer ")
+        print(strings.AmountError)
         return
     userBalancer = int(data[0])
     cursor.execute("update users set balance=? where accountNo=?;", (amount + userBalancer, accNo))
@@ -19,19 +20,20 @@ def deposit():
     cursor.execute("insert into transactions values (?,?,?,?,?,?)", (None, "bank", "credit", amount, accNo, date))
     conn.commit()
 
-    print(f"amount deposited at {date}")
+    print(strings.TransactionCompleted("Deposited", date))
 
 
 def withdraw():
-    accNo = int(input("Enter Account No. : "))
+    print(strings.RequiredInput)
+    accNo = int(input(strings.AccNoInput))
     data = cursor.execute("select balance from users where accountNo=?;", (accNo,)).fetchone()
     if data is None:
-        print("\nUser Not exists...")
+        print(strings.NotExists(str(accNo)))
         return
     userBalancer = int(data[0])
-    amount = int(input("Enter Amount (int only) : "))
+    amount = int(input(strings.AmountInput))
     if amount < 0:
-        print("amount should be only positive integer ")
+        print(strings.AmountError)
         return
     elif amount > userBalancer:
         print("Not enough amount ....")
@@ -41,19 +43,19 @@ def withdraw():
     cursor.execute("insert into transactions values (?,?,?,?,?,?)", (None, "bank", "debit", amount, accNo, date))
     conn.commit()
 
-    print(f"amount withdraw at {date}")
+    print(strings.TransactionCompleted("Withdraw", date))
 
 
 def transfer():
     senderAcc = int(input("Enter Sender Account No. : "))
     senderData = cursor.execute("select balance from users where accountNo=?;", (senderAcc,)).fetchone()
     if senderData is None:
-        print("\nSender Not exists...")
+        print(strings.NotExists(str(senderAcc)))
         return
     receiverAcc = int(input("Enter Receiver Account No. : "))
     receiverData = cursor.execute("select balance from users where accountNo=?;", (receiverAcc,)).fetchone()
     if receiverData is None:
-        print("\nReceiver Not exists...")
+        print(strings.NotExists(str(receiverAcc)))
         return
     senderBal = int(senderData[0])
     receiverBal = int(receiverData[0])
@@ -69,26 +71,18 @@ def transfer():
     cursor.execute("insert into transactions values (?,?,?,?,?,?)",
                    (None, senderAcc, "debit", amount, receiverAcc, date))
     conn.commit()
-    print(f"amount transferred success at {date}")
+    print(strings.TransactionCompleted("Transfer", date))
 
 
 def getTransactions():
-    accNo = int(input("Enter Account No. : "))
+    accNo = int(input(strings.AccNoInput))
     data = cursor.execute("select * from transactions where accountNo=?;", (accNo,)).fetchall()
     if data is None:
-        print("\ntransactions Not exists...")
+        print(strings.NotExists(str(accNo)))
         return
-    print(f"""
-        displaying {str(len(data))} transactions
-        """)
+    print(strings.DisplayingContent(str(len(data)), "Translations"))
     for tr in data:
-        print(f"""
-        ID:{tr[0]}
-        prior:{tr[1]},
-        type:{tr[2]},
-        amount:{tr[3]},
-        date:{tr[5]}
-        """)
+        print(strings.TransactionInfo(tr[0], tr[1], tr[2], tr[3], tr[4]))
 
 
 def parseInp(ins):
@@ -106,10 +100,10 @@ def parseInp(ins):
 def run():
     transaction: bool = True
     while transaction:
-        print(TransactionPromptStr)
-        ins = input(InputCommandStr("Transaction"))
-        if ins == "4":
-            print("\nGoing Back....\n")
+        print(strings.TransactionPromptStr)
+        ins = input(strings.InputCommandStr("Transaction"))
+        if ins == "0":
+            print(strings.Back)
             transaction = False
         else:
             parseInp(ins)
