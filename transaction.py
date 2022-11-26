@@ -36,7 +36,7 @@ def withdraw():
     elif amount > userBalancer:
         print("Not enough amount ....")
         return
-    cursor.execute("update users set balance=? where accountNo=?;", (amount - userBalancer, accNo))
+    cursor.execute("update users set balance=? where accountNo=?;", (userBalancer - amount, accNo))
     date = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
     cursor.execute("insert into Transactions values (?,?,?,?,?,?)", (None, "bank", "debit", amount, accNo, date))
     conn.commit()
@@ -45,7 +45,31 @@ def withdraw():
 
 
 def transfer():
-    pass
+    senderAcc = int(input("Enter Sender Account No. : "))
+    senderData = cursor.execute("select balance from users where accountNo=?;", (senderAcc,)).fetchone()
+    if senderData is None:
+        print("\nSender Not exists...")
+        return
+    receiverAcc = int(input("Enter Receiver Account No. : "))
+    receiverData = cursor.execute("select balance from users where accountNo=?;", (receiverAcc,)).fetchone()
+    if receiverData is None:
+        print("\nReceiver Not exists...")
+        return
+    senderBal = int(senderData[0])
+    receiverBal = int(receiverData[0])
+    amount = int(input("Enter Amount (int only) : "))
+    if amount > senderBal:
+        print("Not enough amount ....")
+        return
+    date = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
+    cursor.execute("update users set balance=? where accountNo=?;", (senderBal - amount, senderAcc))
+    cursor.execute("insert into Transactions values (?,?,?,?,?,?)",
+                   (None, receiverAcc, "debit", amount, senderAcc, date))
+    cursor.execute("update users set balance=? where accountNo=?;", (amount + receiverBal, receiverAcc))
+    cursor.execute("insert into Transactions values (?,?,?,?,?,?)",
+                   (None, senderAcc, "debit", amount, receiverAcc, date))
+    conn.commit()
+    print(f"amount transferred success at {date}")
 
 
 def parseInp(ins):
@@ -71,5 +95,3 @@ def run():
         else:
             parseInp(ins)
 
-
-run()

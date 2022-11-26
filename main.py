@@ -8,7 +8,9 @@ def parseInp(ins):
     if ins == 1:
         account.run()
     elif ins == 2:
-        transaction.main()
+        transaction.run()
+    elif ins == 3:
+        pass
     elif ins == 4:
         account.getAll()
     else:
