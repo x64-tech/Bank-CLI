@@ -1,9 +1,25 @@
+import datetime
 from strings import TransactionPromptStr, InputCommandStr
-from extras import clearScreen
+from database import cursor, conn
 
 
 def deposit():
-    pass
+    accNo = int(input("Enter Account No. : "))
+    data = cursor.execute("select balance from users where accountNo=?;", (accNo,)).fetchone()
+    if data is None:
+        print("\nUser Not exists...")
+        return
+    amount = int(input("Enter Amount (int only) : "))
+    if amount < 0:
+        print("amount should be only positive integer ")
+        return
+    userBalancer = int(data[0])
+    cursor.execute("update users set balance=? where accountNo=?;", (amount + userBalancer, accNo))
+    date = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
+    cursor.execute("insert into Transactions values (?,?,?,?,?,?)", (None, "bank", "credit", amount, accNo, date))
+    conn.commit()
+
+    print(f"amount deposited at {date}")
 
 
 def withdraw():
@@ -15,10 +31,18 @@ def transfer():
 
 
 def parseInp(ins):
-    pass
+    if ins == "1":
+        deposit()
+    elif ins == "2":
+        withdraw()
+    elif ins == "3":
+        transfer()
+
+    else:
+        print("wrong input...")
 
 
-def main():
+def run():
     transaction: bool = True
     while transaction:
         print(TransactionPromptStr)
@@ -28,3 +52,4 @@ def main():
             transaction = False
         else:
             parseInp(ins)
+run()

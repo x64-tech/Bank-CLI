@@ -70,6 +70,7 @@ def deleteAcc():
         return
     if input(f"Confirm to delete acc no. {accNo} user ? (y to confirm)") == "y":
         cursor.execute("delete from users where accountNo=?", (accNo,))
+        conn.commit()
         print(f"Account no. {accNo} user deleted successfully...")
     else:
         print("okk... canceled ")
