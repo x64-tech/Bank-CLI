@@ -10,7 +10,7 @@ def parseInp(ins):
     elif ins == 2:
         transaction.run()
     elif ins == 3:
-        pass
+        account.getBalance()
     elif ins == 4:
         transaction.getTransactions()
     elif ins == 5:

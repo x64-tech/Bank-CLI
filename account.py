@@ -76,6 +76,15 @@ def deleteAcc():
         print("okk... canceled ")
 
 
+def getBalance():
+    accNo = int(input("Enter Account no. : "))
+    data = cursor.execute("select name, balance from users where accountNo=?;", (accNo,)).fetchone()
+    if data is None:
+        print("\nUser Not exists...")
+        return
+    print(f"\ncurrent balance of {data[0]} is {data[1]}")
+
+
 def parseInp(inp):
     if inp == "1":
         createAcc()
