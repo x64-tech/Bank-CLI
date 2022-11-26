@@ -1,7 +1,7 @@
 import account
 import transaction
 from database import initDatabase
-from strings import promptStr, InputCommandStr
+import strings
 
 
 def parseInp(ins):
@@ -16,17 +16,17 @@ def parseInp(ins):
     elif ins == 5:
         account.getAll()
     else:
-        print("wrong input...")
+        print(strings.WrongInput)
 
 
 if __name__ == '__main__':
     initDatabase()
     working = True
     while working:
-        print(promptStr)
-        inp = input(InputCommandStr("Main"))
+        print(strings.promptStr)
+        inp = input(strings.InputCommandStr("Main"))
 
-        if inp == "q" or inp == "Q":
+        if inp == "0":
             print("\nQuiting....\n")
             working = False
         else:

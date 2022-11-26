@@ -4,7 +4,7 @@ promptStr = """
 [3] Check Balance
 [4] Check Transaction
 [5] Check Accounts
-[Q] Exit
+[0] Exit
 """
 
 AccountPromptStr = """
@@ -12,20 +12,45 @@ AccountPromptStr = """
 [2] Update Account
 [3] Search Account
 [4] Delete Account
-[5] Go Back
+[0] Go Back
 """
 
 TransactionPromptStr = """
 [1] Deposit Amount
 [2] Withdraw Amount
 [3] Transfer Amount
-[4] Go Back
+[0] Go Back
 """
 
+AccountInfo = lambda accNo, name, email, balance: f"""
+Account No. {accNo}
+Name : {name}
+email : {email}
+Balance : {balance}
+"""
+
+WrongInput = "\nWrong Input...\n"
+RequiredInput = "\nAll inputs are required (0 to cancel)\n"
+
 InputCommandStr = lambda stage: f"[{stage}] your command > "
+
+EmailInput = lambda email: "Enter Your Email : " if email == "" else f"Enter Your Email {email} : "
+NameInput = lambda name: "Enter Your Name : " if name == "" else f"Enter Your Name {name} : "
+AccNoInput = "Enter Account No. : "
+AmountInput = "Enter Amount : "
+BalanceInput = "Enter Balance : "
+Back = "\nGoing Back..\n"
+
+DisplayingContent = lambda total, cont: f"\nDisplaying {total} {cont}\n"
+NotExists = lambda accNo: f"\nUser Not Exists With Account No. {accNo}\n"
+CancelProcess = lambda process: f"\nOkk, canceling \"{process}\"\n"
+ProcessCompleted = lambda process, rowID: f"\nUser account is {process} with acc no. {rowID}\n"
+ConfirmDeletion = lambda accNo: f"\nDelete Account No. {accNo} User ? (y to confirm) : "
+
+Balance = lambda accNo, balance: f"\nCurrent Balance Of Account No. {accNo} Is {balance}\n"
 
 AccountTableStr = """create table if not exists users (accountNo integer primary key autoincrement, name varchar(50), 
 email varchar(50), balance integer) """
 
-TransTableStr = """create table if not exists Transactions (transID integer primary key autoincrement, prior varchar(50),
- type varchar(50), amount integer, accountNo integer, date varchar(50))"""
+TransTableStr = """create table if not exists transactions (transID integer primary key autoincrement, prior varchar(50)
+,type varchar(50), amount integer, accountNo integer, date varchar(50))"""

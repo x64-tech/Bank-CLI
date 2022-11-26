@@ -1,88 +1,78 @@
+import strings
 from database import cursor, conn
 from extras import clearScreen
-from strings import AccountPromptStr, InputCommandStr
 
 
 def createAcc():
-    clearScreen()
-    print("all details are required, q to cancel\n")
-    name = input("Enter Name : ")
-    email = input("Enter Email : ")
-    balance = int(input("Enter Balance : "))
+    print(strings.RequiredInput)
+    name = input(strings.NameInput(""))
+    email = input(strings.EmailInput(""))
+    balance = int(input(strings.BalanceInput))
 
-    if name == "q" or email == "q":
-        print("okk, canceling")
+    if name == "0" or email == "0":
+        print(strings.CancelProcess("Create Account"))
+        return
+
     cursor.execute("insert into users values (?,?,?,?);", (None, name, email, balance,))
     conn.commit()
-    print(f"\nuser account is created with acc no. {str(cursor.lastrowid)}")
+    print(strings.ProcessCompleted("Created", str(cursor.lastrowid)))
 
 
 def updateAcc():
     clearScreen()
-    accNo = int(input("Enter your acc no. : "))
+    print(strings.RequiredInput)
+    accNo = int(input(strings.AccNoInput))
     data = cursor.execute("select * from users where accountNo=?;", (accNo,)).fetchone()
     if data is None:
-        print("\nUser Not exists...")
+        print(strings.NotExists(str(accNo)))
         return
-
-    print("Enter your details to update, q to cancel\n")
-    name = input(f"Enter name ({data[1]}) : ")
-    email = input(f"Enter name ({data[2]}) : ")
-    if name == "q" or email == "q":
-        print("okk, canceling")
+    name = input(strings.NameInput({data[1]}))
+    email = input(strings.EmailInput({data[2]}))
+    if name == "0" or email == "0":
+        print(strings.CancelProcess("Update Account"))
         return
     cursor.execute("update users set name=?, email=? where accountNo=?", (name, email, accNo,))
     conn.commit()
-    print(f"\nuser account is updated with acc no. {str(accNo)}")
+    print(strings.ProcessCompleted("Updated", str(accNo)))
 
 
 def getOne():
-    accNo = int(input("Enter your acc no. : "))
+    accNo = int(input(strings.AccNoInput))
     data = cursor.execute("select * from users where accountNo=?;", (accNo,)).fetchone()
     if data is None:
-        print("\nUser Not exists...")
+        print(strings.NotExists(str(accNo)))
         return
-    print(f"""
-        Account No. {data[0]}
-        Name : {data[1]}
-        email : {data[2]}
-        Balance : {data[3]}
-        """)
+    print(strings.AccountInfo(data[0], data[1], data[2], data[3]))
 
 
 def getAll():
     data = cursor.execute("select * from users;").fetchall()
-    print(f"displaying {str(len(data))} users\n")
+    print(strings.DisplayingContent(str(len(data)), "Users"))
     for user in data:
-        print(f"""
-        Account No. {user[0]}
-        Name : {user[1]}
-        email : {user[2]}
-        Balance : {user[3]}
-        """)
+        print(strings.AccountInfo(user[0], user[1], user[2], user[3]))
 
 
 def deleteAcc():
-    accNo = int(input("Enter Account No. : "))
+    accNo = int(input(strings.AccNoInput))
     data = cursor.execute("select * from users where accountNo=?;", (accNo,)).fetchone()
     if data is None:
-        print("\nUser Not exists...")
+        print(strings.NotExists(str(accNo)))
         return
-    if input(f"Confirm to delete acc no. {accNo} user ? (y to confirm)") == "y":
+    if input(strings.ConfirmDeletion(str(accNo))) == "y":
         cursor.execute("delete from users where accountNo=?", (accNo,))
         conn.commit()
-        print(f"Account no. {accNo} user deleted successfully...")
+        print(strings.ProcessCompleted("Deleted", str(accNo)))
     else:
-        print("okk... canceled ")
+        print(strings.CancelProcess("Delete Account"))
 
 
 def getBalance():
-    accNo = int(input("Enter Account no. : "))
+    accNo = int(input(strings.AccNoInput))
     data = cursor.execute("select name, balance from users where accountNo=?;", (accNo,)).fetchone()
     if data is None:
-        print("\nUser Not exists...")
+        print(strings.NotExists(str(accNo)))
         return
-    print(f"\ncurrent balance of {data[0]} is {data[1]}")
+    print(strings.Balance(data[0], data[1]))
 
 
 def parseInp(inp):
@@ -102,10 +92,10 @@ def parseInp(inp):
 def run():
     account: bool = True
     while account:
-        print(AccountPromptStr)
-        ins = input(InputCommandStr("Account"))
-        if ins == "5":
-            print("\nGoing Back....\n")
+        print(strings.AccountPromptStr)
+        ins = input(strings.InputCommandStr("Account"))
+        if ins == "0":
+            print(strings.Back)
             account = False
         else:
             parseInp(ins)

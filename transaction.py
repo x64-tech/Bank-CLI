@@ -16,7 +16,7 @@ def deposit():
     userBalancer = int(data[0])
     cursor.execute("update users set balance=? where accountNo=?;", (amount + userBalancer, accNo))
     date = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
-    cursor.execute("insert into Transactions values (?,?,?,?,?,?)", (None, "bank", "credit", amount, accNo, date))
+    cursor.execute("insert into transactions values (?,?,?,?,?,?)", (None, "bank", "credit", amount, accNo, date))
     conn.commit()
 
     print(f"amount deposited at {date}")
@@ -38,7 +38,7 @@ def withdraw():
         return
     cursor.execute("update users set balance=? where accountNo=?;", (userBalancer - amount, accNo))
     date = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
-    cursor.execute("insert into Transactions values (?,?,?,?,?,?)", (None, "bank", "debit", amount, accNo, date))
+    cursor.execute("insert into transactions values (?,?,?,?,?,?)", (None, "bank", "debit", amount, accNo, date))
     conn.commit()
 
     print(f"amount withdraw at {date}")
@@ -63,10 +63,10 @@ def transfer():
         return
     date = datetime.datetime.now().strftime("%d/%m/%Y %H:%M")
     cursor.execute("update users set balance=? where accountNo=?;", (senderBal - amount, senderAcc))
-    cursor.execute("insert into Transactions values (?,?,?,?,?,?)",
+    cursor.execute("insert into transactions values (?,?,?,?,?,?)",
                    (None, receiverAcc, "debit", amount, senderAcc, date))
     cursor.execute("update users set balance=? where accountNo=?;", (amount + receiverBal, receiverAcc))
-    cursor.execute("insert into Transactions values (?,?,?,?,?,?)",
+    cursor.execute("insert into transactions values (?,?,?,?,?,?)",
                    (None, senderAcc, "debit", amount, receiverAcc, date))
     conn.commit()
     print(f"amount transferred success at {date}")
@@ -74,9 +74,9 @@ def transfer():
 
 def getTransactions():
     accNo = int(input("Enter Account No. : "))
-    data = cursor.execute("select * from Transactions where accountNo=?;", (accNo,)).fetchall()
+    data = cursor.execute("select * from transactions where accountNo=?;", (accNo,)).fetchall()
     if data is None:
-        print("\nTransactions Not exists...")
+        print("\ntransactions Not exists...")
         return
     print(f"""
         displaying {str(len(data))} transactions
