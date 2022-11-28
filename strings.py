@@ -22,6 +22,10 @@ TransactionPromptStr = """
 [0] Go Back
 """
 
+Intro = """
+    Welcome to x64-Tech Bank
+"""
+
 AccountInfo = lambda accNo, name, email, balance: f"""
 Account No. {accNo}
 Name : {name}

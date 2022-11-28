@@ -20,6 +20,7 @@ def parseInp(ins):
 
 
 if __name__ == '__main__':
+    print(strings.Intro)
     initDatabase()
     working = True
     while working:
